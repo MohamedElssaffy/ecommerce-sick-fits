@@ -7,6 +7,8 @@ export async function insertSeedData(ks: any) {
 
   console.log(`🌱 Inserting Seed Data: ${products.length} Products`);
   const { mongoose } = adapter;
+  await mongoose.model('Product').deleteMany();
+  await mongoose.model('ProductImage').deleteMany();
   for (const product of products) {
     console.log(`  🛍️ Adding Product: ${product.name}`);
     const { _id } = await mongoose

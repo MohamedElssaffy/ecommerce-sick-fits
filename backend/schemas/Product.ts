@@ -4,7 +4,7 @@ import { list } from '@keystone-next/keystone/schema';
 export const Product = list({
   fields: {
     name: text({ isRequired: true }),
-    desc: text({ ui: { displayMode: 'textarea' } }),
+    description: text({ ui: { displayMode: 'textarea' } }),
     photo: relationship({
       ref: 'ProductImage.product',
       ui: {
