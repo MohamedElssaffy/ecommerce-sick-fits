@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function useForm(initState = {}) {
+export default function useForm(initState = {}, update = false) {
   const [inputs, setInputs] = useState(initState);
+  const isDiff = JSON.stringify(inputs) !== JSON.stringify(initState);
+  useEffect(() => {
+    if (update && isDiff) {
+      setInputs(initState);
+    }
+  }, [initState, isDiff, update]);
 
   const handleChange = (e) => {
     let { name, value, type } = e.target;

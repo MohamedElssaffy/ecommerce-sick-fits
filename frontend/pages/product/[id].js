@@ -1,8 +1,11 @@
-import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 
 import SingleProduct from '../../components/SingleProduct';
 
-export default function SingleProductPage() {
-  const { id } = useRouter().query;
-  return <SingleProduct id={id} />;
+export default function SingleProductPage({ query }) {
+  return <SingleProduct id={query.id} />;
 }
+
+SingleProductPage.propTypes = {
+  query: PropTypes.object.isRequired,
+};
