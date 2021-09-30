@@ -28,6 +28,7 @@ const Item = styled.div`
     background: var(--lightGray);
     & > * {
       background: white;
+      cursor: pointer;
       border: 0;
       font-size: 1rem;
       padding: 1rem;

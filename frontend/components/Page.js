@@ -14,10 +14,11 @@ const GlobalStyles = createGlobalStyle`
     --red: #ff0000;
     --black: #393939;
     --grey: #3a3a3a;
-    --light-grey: #e1e1e1;
-    --off-white: #ededed;
+    --lightGrey: #e1e1e1;
+    --lightGray: var(--lightGrey);
+    --offWhite: #ededed;
     --max-width: 1000px;
-    --box-shadow: 0 12px 24px 0 rgba(0,0,0,0.09);
+    --bs: 0 12px 24px 0 rgba(0,0,0,0.09);
     box-sizing: border-box;
     font-size: 62.5%;
   }
