@@ -25,6 +25,11 @@ const { withAuth } = createAuth({
   initFirstItem: {
     fields: ['name', 'email', 'password'],
   },
+  passwordResetLink: {
+    sendToken(args) {
+      console.log(args);
+    },
+  },
 });
 
 export default withAuth(
@@ -51,6 +56,7 @@ export default withAuth(
       ProductImage,
     }),
     ui: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       isAccessAllowed: ({ session }) => !!session?.data,
     },
     session: withItemData(statelessSessions(sessionConfig), {
