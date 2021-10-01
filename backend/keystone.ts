@@ -8,8 +8,11 @@ import {
 
 import { User } from './schemas/User';
 import { Product } from './schemas/Product';
+import { CartItem } from './schemas/CartItem';
 import { ProductImage } from './schemas/ProductImage';
 import { insertSeedData } from './seed-data';
+import { sendResetPasswordToken } from './lib/mail';
+import { extendGraphqlSchema } from './mutations/Index';
 
 const dataBaseUrl = process.env.DATABASE_URL;
 
@@ -25,9 +28,10 @@ const { withAuth } = createAuth({
   initFirstItem: {
     fields: ['name', 'email', 'password'],
   },
+
   passwordResetLink: {
-    sendToken(args) {
-      console.log(args);
+    async sendToken({ identity, token }) {
+      await sendResetPasswordToken(identity, token);
     },
   },
 });
@@ -54,7 +58,9 @@ export default withAuth(
       User,
       Product,
       ProductImage,
+      CartItem,
     }),
+    extendGraphqlSchema,
     ui: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       isAccessAllowed: ({ session }) => !!session?.data,
