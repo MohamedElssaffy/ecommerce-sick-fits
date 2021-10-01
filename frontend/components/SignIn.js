@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import Form from './styles/Form';
 import useForm from '../lib/useForm';
 import DisplayError from './ErrorMessage';
-import { CURRENT_USER_QUERY } from '../lib/useUser';
+import { CURRENT_USER_QUERY } from './User';
 
 const SIGN_IN_MUTATION = gql`
   mutation SIGN_IN_MUTATION($email: String!, $password: String!) {
@@ -46,10 +46,10 @@ export default function SignIn() {
       'UserAuthenticationWithPasswordFailure' && 'Invalid Email or Password';
 
   return (
-    <Form aria-busy={loading} method="POST" onSubmit={handleSubmit}>
+    <Form method="POST" onSubmit={handleSubmit}>
       <h2>Sign In With Your Account</h2>
       <DisplayError error={{ message: error }} />
-      <fieldset>
+      <fieldset disabled={loading} aria-busy={loading}>
         <label htmlFor="email">
           Email
           <input

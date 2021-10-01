@@ -16,9 +16,7 @@ const RESET_REQUEST_MUTATION = gql`
 
 export default function ResetRequest() {
   const { inputs, handleChange, resetForm } = useForm({
-    name: '',
     email: '',
-    password: '',
   });
 
   const [restRequest, { loading, data }] = useMutation(RESET_REQUEST_MUTATION, {
@@ -34,11 +32,11 @@ export default function ResetRequest() {
   };
 
   return (
-    <Form aria-busy={loading} method="POST" onSubmit={handleSubmit}>
+    <Form method="POST" onSubmit={handleSubmit}>
       <h2>Reset Password</h2>
       <DisplayError
         error={
-          data?.code === 'IDENTITY_NOT_FOUND'
+          data?.sendUserPasswordResetLink?.code === 'IDENTITY_NOT_FOUND'
             ? {
                 message: 'There is no account with this email',
               }
@@ -49,7 +47,7 @@ export default function ResetRequest() {
         <p>Success! Please Check your email for a link!</p>
       )}
 
-      <fieldset>
+      <fieldset disabled={loading} aria-busy={loading}>
         <label htmlFor="email">
           Email
           <input
