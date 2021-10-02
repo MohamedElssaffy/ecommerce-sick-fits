@@ -26,6 +26,9 @@ const ProductsListStyles = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export default function Products({ page }) {

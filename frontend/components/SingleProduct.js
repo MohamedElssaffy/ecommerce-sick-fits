@@ -5,6 +5,7 @@ import Head from 'next/head';
 
 import styled from 'styled-components';
 import DisplayError from './ErrorMessage';
+import AddToCart from './AddToCart';
 
 const SINGLE_PRODUCT_QUERY = gql`
   query SINGLE_PRODUCT_QUERY($id: ID!) {
@@ -35,6 +36,14 @@ const ProductStyles = styled.div`
     width: 100%;
     object-fit: contain;
   }
+  button {
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--red);
+    font-size: 2rem;
+
+    cursor: pointer;
+  }
 `;
 
 export default function SingleProduct({ id }) {
@@ -58,6 +67,7 @@ export default function SingleProduct({ id }) {
       <div className="detials">
         <h2>{Product.name}</h2>
         <p>{Product.description}</p>
+        <AddToCart id={Product.id} />
       </div>
     </ProductStyles>
   );

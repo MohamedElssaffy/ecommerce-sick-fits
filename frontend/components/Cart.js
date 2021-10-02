@@ -6,6 +6,7 @@ import CartItem from './CartItem';
 import calcTotalCartPrice from '../lib/calcTotalCartPrice';
 import formatMony from '../lib/formatMony';
 import { useCart } from '../lib/cartState';
+import Checkout from './Checkout';
 
 export default function Cart() {
   const me = useUser();
@@ -27,6 +28,7 @@ export default function Cart() {
       </ul>
       <footer>
         <p>{formatMony(calcTotalCartPrice(me.cart))}</p>
+        <Checkout />
       </footer>
     </CartStyles>
   );

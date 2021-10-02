@@ -42,6 +42,9 @@ const SearchStyles = styled.div`
     &.loading {
       animation: ${glow} 0.5s ease-in-out infinite alternate;
     }
+    &:focus {
+      outline: none;
+    }
   }
 `;
 
