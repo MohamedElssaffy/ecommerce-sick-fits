@@ -7,14 +7,16 @@ import {
 } from '@keystone-next/keystone/session';
 
 import { User } from './schemas/User';
+import { Role } from './schemas/Role';
 import { Product } from './schemas/Product';
 import { CartItem } from './schemas/CartItem';
 import { Order } from './schemas/Order';
 import { OrderItem } from './schemas/OrderItem';
 import { ProductImage } from './schemas/ProductImage';
-import { insertSeedData } from './seed-data';
+import { insertSeedData } from './seed-data/index';
 import { sendResetPasswordToken } from './lib/mail';
 import { extendGraphqlSchema } from './mutations/Index';
+import { permissionsList } from './schemas/fields';
 
 const dataBaseUrl = process.env.DATABASE_URL;
 
@@ -58,6 +60,7 @@ export default withAuth(
 
     lists: createSchema({
       User,
+      Role,
       Product,
       ProductImage,
       CartItem,
@@ -70,7 +73,7 @@ export default withAuth(
       isAccessAllowed: ({ session }) => !!session?.data,
     },
     session: withItemData(statelessSessions(sessionConfig), {
-      User: 'id',
+      User: `id name role {${permissionsList.join(' ')}}`,
     }),
   })
 );

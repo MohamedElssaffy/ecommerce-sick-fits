@@ -79,7 +79,7 @@ function CheckoutForm() {
     const order = await checkout({ variables: { token: paymentMethod.id } });
 
     router.push({
-      pathname: '/orders',
+      pathname: '/order/[id]',
       query: { id: order.data.checkout.id },
     });
 
