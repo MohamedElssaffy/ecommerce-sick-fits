@@ -3,8 +3,10 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 
 import useForm from '../lib/useForm';
+import { useUser } from '../lib/userContext';
 import DisplayError from './ErrorMessage';
-import { ALL_PRODUCTS_QUERY } from './Products';
+import { PAGINTATION_QUERY } from './Pagination';
+import { ALL_PRODUCTS_FOR_SIGNIN_QUERY } from './Products';
 import Form from './styles/Form';
 
 const CREATE_PRODUCT_MUTATION = gql`
@@ -13,6 +15,7 @@ const CREATE_PRODUCT_MUTATION = gql`
     $price: Int!
     $description: String!
     $image: Upload
+    $userId: ID!
   ) {
     createProduct(
       data: {
@@ -21,6 +24,7 @@ const CREATE_PRODUCT_MUTATION = gql`
         description: $description
         photo: { create: { image: $image, altText: $name } }
         status: "AVAILABLE"
+        user: { connect: { id: $userId } }
       }
     ) {
       id
@@ -36,12 +40,15 @@ export default function CreateProduct() {
     price: 5165,
     description: 'a test description',
   });
-
+  const { user } = useUser();
   const [createProduct, { loading, error }] = useMutation(
     CREATE_PRODUCT_MUTATION,
     {
-      variables: inputs,
-      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
+      variables: { ...inputs, userId: user?.id },
+      refetchQueries: [
+        { query: ALL_PRODUCTS_FOR_SIGNIN_QUERY },
+        { query: PAGINTATION_QUERY },
+      ],
     }
   );
 

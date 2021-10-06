@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { useCart } from '../lib/cartState';
-import { useUser } from './User';
+import { useUser } from '../lib/userContext';
 import CartCount from './CartCount';
 import SignOut from './SignOut';
-
 import NavStyles from './styles/NavStyles';
 
 export default function Nav() {
-  const user = useUser();
+  const { user } = useUser();
   const { openCart } = useCart();
   return (
     <NavStyles>

@@ -1,49 +1,34 @@
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/client';
-import Form from './styles/Form';
+import { useState } from 'react';
+import Router from 'next/router';
 import useForm from '../lib/useForm';
+import { useUser } from '../lib/userContext';
 import DisplayError from './ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
-
-const SIGN_IN_MUTATION = gql`
-  mutation SIGN_IN_MUTATION($email: String!, $password: String!) {
-    authenticateUserWithPassword(email: $email, password: $password) {
-      ... on UserAuthenticationWithPasswordSuccess {
-        sessionToken
-        item {
-          id
-          name
-        }
-      }
-      ... on UserAuthenticationWithPasswordFailure {
-        code
-        message
-      }
-    }
-  }
-`;
+import Form from './styles/Form';
 
 export default function SignIn() {
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
   const { inputs, handleChange, resetForm } = useForm({
     email: '',
     password: '',
   });
 
-  const [signin, { loading, data }] = useMutation(SIGN_IN_MUTATION, {
-    variables: inputs,
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
+  const { signinUser, user } = useUser();
+  if (user) {
+    Router.push('/');
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signin();
+    setLoading(true);
+    const res = await signinUser(inputs);
 
+    setLoading(false);
+    if (res) {
+      return setError(res);
+    }
     resetForm();
   };
-
-  const error =
-    data?.authenticateUserWithPassword.__typename ===
-      'UserAuthenticationWithPasswordFailure' && 'Invalid Email or Password';
 
   return (
     <Form method="POST" onSubmit={handleSubmit}>

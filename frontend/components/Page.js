@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { useUser } from '../lib/userContext';
 import Header from './Header';
 
 const GlobalStyles = createGlobalStyle`
@@ -58,6 +60,13 @@ const InnerStyles = styled.div`
 `;
 
 export default function Page({ children }) {
+  // const user = useUser();
+
+  const { getUser } = useUser();
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+
   return (
     <div>
       <GlobalStyles />

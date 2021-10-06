@@ -109,7 +109,7 @@ export default function UpdateProduct({ id }) {
           />
         </label>
 
-        <button type="submit">+Add Product</button>
+        <button type="submit">Save Chages</button>
       </fieldset>
     </Form>
   );

@@ -1,12 +1,9 @@
 // import gql from 'graphql-tag';
-import Router from 'next/router';
-import { useEffect } from 'react';
 import styled from 'styled-components';
-
 import ResetRequest from '../components/ResetRequest';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
-import { useUser } from '../components/User';
+
 // import { createClient } from '../lib/withData';
 
 const GridStyles = styled.div`
@@ -16,13 +13,6 @@ const GridStyles = styled.div`
 `;
 
 export default function SignInPage() {
-  const me = useUser();
-  useEffect(() => {
-    if (me) {
-      return Router.push('/');
-    }
-  }, [me]);
-
   return (
     <GridStyles>
       <SignIn />
@@ -32,28 +22,16 @@ export default function SignInPage() {
   );
 }
 
-// export const getServerSideProps = async (context) => {
-//   const client = createClient({});
-//   const { data } = await client.query({
-//     context: {
-//       headers: {
-//         'keystonejs-session': context.req.cookies['keystonejs-session'],
-//       },
-//     },
-//     query: gql`
-//       query {
-//         authenticatedItem {
-//           ... on User {
-//             id
-//             email
-//             name
-//           }
-//         }
-//       }
-//     `,
-//   });
+export const getServerSideProps = async ({ req }) => {
+  const { user } = req.cookies;
 
-//   console.log({ data });
-//   console.log({ context: context.req.cookies['keystonejs-session'] });
-//   return { props: {} };
-// };
+  if (user) {
+    return {
+      redirect: {
+        destination: '/',
+        permenant: false,
+      },
+    };
+  }
+  return { props: {} };
+};

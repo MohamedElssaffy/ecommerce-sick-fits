@@ -55,34 +55,38 @@ function SingleOrder() {
         <title>Your Orders ({allOrders.length})</title>
       </Head>
       <OrderUl>
-        {allOrders.map((order) => (
-          <OrderItemStyles key={order.id}>
-            <Link href={`/order/${order.id}`}>
-              <a>
-                <div className="order-meta">
-                  <p>
-                    {countOrderItems(order)} Item
-                    {countOrderItems(order) === 1 ? '' : 's'}
-                  </p>
-                  <p>
-                    {order.items.length} Product
-                    {order.items.length === 1 ? '' : 's'}
-                  </p>
-                  <p>{formatMony(order.total)}</p>
-                </div>
-                <div className="images">
-                  {order.items.map((item) => (
-                    <img
-                      key={item.id}
-                      src={item.photo?.image?.publicUrlTransformed}
-                      alt={item.name}
-                    />
-                  ))}
-                </div>
-              </a>
-            </Link>
-          </OrderItemStyles>
-        ))}
+        {allOrders.length === 0 ? (
+          <p>You dont make any order yet</p>
+        ) : (
+          allOrders.map((order) => (
+            <OrderItemStyles key={order.id}>
+              <Link href={`/order/${order.id}`}>
+                <a>
+                  <div className="order-meta">
+                    <p>
+                      {countOrderItems(order)} Item
+                      {countOrderItems(order) === 1 ? '' : 's'}
+                    </p>
+                    <p>
+                      {order.items.length} Product
+                      {order.items.length === 1 ? '' : 's'}
+                    </p>
+                    <p>{formatMony(order.total)}</p>
+                  </div>
+                  <div className="images">
+                    {order.items.map((item) => (
+                      <img
+                        key={item.id}
+                        src={item.photo?.image?.publicUrlTransformed}
+                        alt={item.name}
+                      />
+                    ))}
+                  </div>
+                </a>
+              </Link>
+            </OrderItemStyles>
+          ))
+        )}
       </OrderUl>
     </div>
   );

@@ -21,7 +21,7 @@ export default function Pagination({ page }) {
 
   if (loading) return <p>Loading...</p>;
 
-  if (error) return <DisplayError error={error.message} />;
+  if (error) return <DisplayError error={error} />;
 
   const { count } = data._allProductsMeta;
 

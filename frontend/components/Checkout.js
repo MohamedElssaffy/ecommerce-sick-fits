@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/dist/client/router';
 import SickButton from './styles/SickButton';
 import { useCart } from '../lib/cartState';
-import { CURRENT_USER_QUERY } from './User';
+import { useUser } from '../lib/userContext';
 
 const CheckoutFormStyles = styled.form`
   box-shadow: 0 1px 2px 2px rgba(0, 0, 0, 0.04);
@@ -49,11 +49,13 @@ function CheckoutForm() {
   const [error, setError] = useState();
 
   const router = useRouter();
-
+  const { getUser } = useUser();
   const { closeCart } = useCart();
 
   const [checkout, { error: graphQlError }] = useMutation(CHECKOUT_MUTATION, {
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    onCompleted() {
+      getUser();
+    },
   });
 
   const stripe = useStripe();

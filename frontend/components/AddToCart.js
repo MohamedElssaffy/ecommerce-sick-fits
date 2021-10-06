@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
-import { CURRENT_USER_QUERY } from './User';
+import { useUser } from '../lib/userContext';
 
 const ADD_TO_CART_MUTATION = gql`
   mutation ADD_TO_CART_MUTATION($id: ID!) {
@@ -11,9 +11,12 @@ const ADD_TO_CART_MUTATION = gql`
   }
 `;
 function AddToCart({ id }) {
+  const { getUser } = useUser();
   const [addtoCart, { loading }] = useMutation(ADD_TO_CART_MUTATION, {
     variables: { id },
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    onCompleted() {
+      getUser();
+    },
   });
   return (
     <button disabled={loading} onClick={addtoCart} type="button">

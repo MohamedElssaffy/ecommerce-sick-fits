@@ -1,12 +1,12 @@
 import CreateProduct from '../components/CreateProduct';
-import IsSignIn from '../components/IsSignIn';
+import { privateRoute } from '../lib/PrivateRoute';
 
 export default function SellPage() {
   return (
     <div>
-      <IsSignIn>
-        <CreateProduct />
-      </IsSignIn>
+      <CreateProduct />
     </div>
   );
 }
+
+export const getServerSideProps = privateRoute;
