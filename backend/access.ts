@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { permissionsList } from './schemas/fields';
 import { ListAccessArgs } from './types';
 
