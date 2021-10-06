@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useUser } from '../lib/userContext';
 
@@ -24,18 +25,24 @@ const BigBtnStyles = styled.button`
 
 function DeleteCart({ id }) {
   const { getUser } = useUser();
-  const [deleteCart, { loading }] = useMutation(DELETE_CART_MUTATION, {
+  const [deleteCart] = useMutation(DELETE_CART_MUTATION, {
     variables: { id },
     onCompleted() {
       getUser();
     },
   });
+
+  const [disableButton, setDisableButton] = useState(false);
+
   return (
     <BigBtnStyles
       type="button"
-      disabled={loading}
+      disabled={disableButton}
       title="Remove Item From This Cart"
-      onClick={deleteCart}
+      onClick={async () => {
+        setDisableButton(true);
+        await deleteCart();
+      }}
     >
       &times;
     </BigBtnStyles>

@@ -40,6 +40,8 @@ const { withAuth } = createAuth({
   },
 });
 
+console.log({ processEnv: process.env.FRONTEND_URL });
+
 export default withAuth(
   config({
     server: {

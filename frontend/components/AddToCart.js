@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import { useUser } from '../lib/userContext';
 
 const ADD_TO_CART_MUTATION = gql`
@@ -11,15 +12,27 @@ const ADD_TO_CART_MUTATION = gql`
   }
 `;
 function AddToCart({ id }) {
-  const { getUser } = useUser();
+  const { getUser, user } = useUser();
   const [addtoCart, { loading }] = useMutation(ADD_TO_CART_MUTATION, {
     variables: { id },
     onCompleted() {
       getUser();
     },
   });
+
+  const router = useRouter();
+
+  const handleAddToCart = () => {
+    if (!user) {
+      router.push('/signin');
+      return;
+    }
+
+    addtoCart();
+  };
+
   return (
-    <button disabled={loading} onClick={addtoCart} type="button">
+    <button disabled={loading} onClick={handleAddToCart} type="button">
       Add{loading && 'ing'} To Cart
     </button>
   );

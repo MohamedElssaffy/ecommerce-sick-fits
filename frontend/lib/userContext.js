@@ -1,9 +1,10 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 const initState = {
   user: null,
+  setState: () => {},
 };
 
 export const LocalUserStateContext = createContext(initState);
@@ -80,38 +81,47 @@ export function useUser() {
     fetchPolicy: 'network-only',
     onCompleted(data) {
       const user = data?.authenticatedItem;
-      setState({ user });
-      document.cookie = `user=${JSON.stringify(user)}`;
+      if (user) {
+        setState({ user });
+        document.cookie = `user=${JSON.stringify(user)}`;
+      } else {
+        document.cookie = 'user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+      }
     },
     onError() {
       document.cookie = 'user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
     },
   });
-  console.log({ all });
   const [signout] = useMutation(SIGN_OUT_MUTATION);
   const [signin] = useMutation(SIGN_IN_MUTATION);
 
-  const getUser = () => {
-    getSignInUser();
-  };
+  const methods = useMemo(
+    () => ({
+      getUser: () => {
+        getSignInUser();
+      },
 
-  const signoutUser = async () => {
-    await signout();
-    setState({ user: null });
-  };
+      signoutUser: async () => {
+        await signout();
+        setState({ user: null });
+        document.cookie = 'user= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+      },
+      signinUser: async (variables) => {
+        const { data } = await signin({ variables });
+        const error =
+          data?.authenticateUserWithPassword.__typename ===
+            'UserAuthenticationWithPasswordFailure' &&
+          'Invalid Email or Password';
+        if (error) {
+          return error;
+        }
+        methods.getUser();
+      },
+    }),
+    [getSignInUser, setState, signin, signout]
+  );
 
-  const signinUser = async (variables) => {
-    const { data } = await signin({ variables });
-    const error =
-      data?.authenticateUserWithPassword.__typename ===
-        'UserAuthenticationWithPasswordFailure' && 'Invalid Email or Password';
-    if (error) {
-      return error;
-    }
-    getUser();
-  };
-
-  return { ...all, getUser, signoutUser, signinUser };
+  return { ...all, ...methods };
 }
 
 export { UserStateProvider };
