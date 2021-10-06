@@ -60,9 +60,8 @@ const InnerStyles = styled.div`
 `;
 
 export default function Page({ children }) {
-  // const user = useUser();
-
   const { getUser } = useUser();
+
   useEffect(() => {
     getUser();
   }, [getUser]);

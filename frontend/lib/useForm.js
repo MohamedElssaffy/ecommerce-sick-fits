@@ -1,47 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function useForm(initState = {}, update = false) {
   const [inputs, setInputs] = useState(initState);
-  const isDiff = JSON.stringify(inputs) !== JSON.stringify(initState);
+
   useEffect(() => {
-    if (update && isDiff) {
+    if (update && !inputs.name && !inputs.price && !inputs.description) {
       setInputs(initState);
     }
-  }, [initState, isDiff, update]);
+  }, [initState, inputs, update]);
 
-  const handleChange = (e) => {
-    let { name, value, type } = e.target;
+  const methods = useMemo(
+    () => ({
+      handleChange: (e) => {
+        let { name, value, type } = e.target;
 
-    if (type === 'number') {
-      value = parseInt(value);
-    }
+        if (type === 'number') {
+          value = parseInt(value);
+        }
 
-    if (type === 'file') {
-      [value] = e.target.files;
-    }
+        if (type === 'file') {
+          [value] = e.target.files;
+        }
 
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-  };
+        setInputs({
+          ...inputs,
+          [name]: value,
+        });
+      },
 
-  const resetForm = () => {
-    setInputs(initState);
-  };
+      resetForm: () => {
+        setInputs(initState);
+      },
 
-  const clearForm = () => {
-    const blankState = Object.fromEntries(
-      Object.entries(inputs).map(([key]) => [key, ''])
-    );
+      clearForm: () => {
+        const blankState = Object.fromEntries(
+          Object.entries(inputs).map(([key]) => [key, ''])
+        );
 
-    setInputs(blankState);
-  };
+        setInputs(blankState);
+      },
+    }),
+    [initState, inputs]
+  );
 
   return {
     inputs,
-    handleChange,
-    resetForm,
-    clearForm,
+    ...methods,
   };
 }

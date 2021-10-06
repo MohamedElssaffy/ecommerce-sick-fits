@@ -5,7 +5,7 @@ export const privateRoute = async ({ req }) => {
     return {
       redirect: {
         destination: '/signin',
-        permenant: false,
+        permanent: false,
       },
     };
   }
